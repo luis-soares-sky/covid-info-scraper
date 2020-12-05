@@ -1,4 +1,3 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/windows,macos,linux,node
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,linux,node
 
@@ -184,3 +183,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,linux,node
+
+/data/
