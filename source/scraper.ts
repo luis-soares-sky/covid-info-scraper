@@ -38,11 +38,12 @@ export async function runConfig(context: SourceContext, log: SourceLoggerMethod)
  * @param configs Array of configuration contexts to run.
  */
 export async function runAllConfigs(...configs: SourceContext[]) {
+	log("Running configs...");
 	for (const config of configs) {
+		log(`Running config "${config.id}"...`);
 		await runConfig(config, log);
-		console.log();
 	}
-	log("All done.");
+	log("All done.\n");
 }
 
 /**
