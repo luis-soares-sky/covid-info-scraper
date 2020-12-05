@@ -1,5 +1,5 @@
 import axios from "axios";
-import { LoggerMethod, SourceContext } from "./types";
+import { SourceContext, SourceLoggerMethod } from "./types/sources";
 import * as colors from "./utils/colors";
 
 /**
@@ -22,13 +22,13 @@ export async function fetchHtml(url: string): Promise<string> {
  * Runs a given configuration by scraping the given URL, extracting the data, and executing the runner.
  * @param context Configuration context needed to run the scraping process.
  */
-export async function runConfig(context: SourceContext, logger: LoggerMethod): Promise<any> {
+export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<any> {
 	const html = await fetchHtml(context.url);
 	const latest = context.extractor(html);
-	const notification = await context.runner(context, latest, logger);
+	const notification = await context.runner(latest, context, log);
 
 	if (notification) {
-		return axios.post(context.webhook, notification);
+		return axios.post(context.webhook, notification); // post to discord
 	}
 	return null;
 }

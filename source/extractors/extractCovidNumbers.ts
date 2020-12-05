@@ -1,5 +1,5 @@
 import { load } from "cheerio";
-import { CovidNumbers } from "../types";
+import { CovidNumbers } from "../types/covid";
 import { neutralizeNumber, sanitizeNumber } from "../utils/number";
 
 /**

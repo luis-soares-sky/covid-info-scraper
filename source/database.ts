@@ -1,9 +1,21 @@
 import lowdb from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 import { resolve } from "path";
-import { CovidNumbers, DatabaseRecord, DatabaseStruct } from "./types";
+import { CovidNumbers } from "./types/covid";
 
 const instances: { [key: string]: DatabaseInstance } = {};
+
+export type DatabaseRecord = {
+	id: string,
+	info: CovidNumbers,
+	timestampAdd: number
+	timestampUpdate: number
+};
+
+export type DatabaseStruct = {
+	records: DatabaseRecord[],
+	count: number
+};
 
 export class DatabaseInstance {
 	connection: lowdb.LowdbSync<DatabaseStruct>;

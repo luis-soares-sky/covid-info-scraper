@@ -1,4 +1,4 @@
-import { CovidNumbers } from "../types";
+import { CovidNumbers } from "../types/covid";
 
 /**
  * Calculates delta between the provided data numbers.
