@@ -1,12 +1,12 @@
 import { load } from "cheerio";
-import { CovidNumbers } from "../types/covid";
+import { SourceExtractor } from "../types/sources";
 import { neutralizeNumber, sanitizeNumber } from "../utils/number";
 
 /**
  * Extracts case, death and recovery numbers by using cheerio to parse the given HTML.
  * @param html Scraped HTML from the request.
  */
-export function extractCovidNumbers(html: string): CovidNumbers {
+export const extractCovidNumbers: SourceExtractor = (html: string) => {
 	const $ = load(html);
 
 	const cases = sanitizeNumber($(".maincounter-number").eq(0).text());

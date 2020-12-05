@@ -1,8 +1,7 @@
 import { filter, isNumber, some } from "lodash";
 import { getDatabase } from "../database";
 import { CovidNumbers } from "../types/covid";
-import { DiscordNotification } from "../types/discord";
-import { SourceContext, SourceLoggerMethod } from "../types/sources";
+import { SourceContext, SourceLoggerMethod, SourceRunner } from "../types/sources";
 import { calcCovidDelta, calcCovidTrends } from "../utils/covid";
 import { formatYMD } from "../utils/date";
 import { formatNumber } from "../utils/number";
@@ -30,7 +29,7 @@ function outputDailyStatsLine(label: string, value: number, delta?: number, tren
  * @param latest Latest COVID data.
  * @param log Logger method.
  */
-export async function runDailyStats(latest: CovidNumbers, context: SourceContext, log: SourceLoggerMethod): Promise<DiscordNotification | null> {
+export const runDailyStats: SourceRunner = async (latest: CovidNumbers, context: SourceContext, log: SourceLoggerMethod) => {
 	const skipDeltaCheck = process.env.DAILY_SKIP_DELTA_CHECK == "true";
 
 	const currentDate = new Date();

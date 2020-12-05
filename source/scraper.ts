@@ -42,7 +42,7 @@ export async function runAllConfigs(...configs: SourceContext[]) {
 		await runConfig(config, log);
 		console.log();
 	}
-	console.log("All done.");
+	log("All done.");
 }
 
 /**
@@ -50,6 +50,10 @@ export async function runAllConfigs(...configs: SourceContext[]) {
  * @param message Message to log.
  * @param context Configuration context.
  */
-function log(message: string, context: SourceContext): void {
-	console.log(`${context.logColor ?? colors.Reset}"${context.id}":${colors.Reset} ${message}`);
+export function log(message: string, context?: SourceContext): void {
+	let contextStr = "";
+	if (context) {
+		contextStr = `${context.logColor ?? colors.Reset}["${context.id}"]${colors.Reset} `;
+	}
+	console.log(`[${new Date().toISOString()}] ${contextStr}${message}`);
 }
