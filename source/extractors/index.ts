@@ -1,1 +1,1 @@
-export { extractCovidNumbers } from "./extractCovidNumbers";
+export { extractWorldometerNumbers } from "./extractWorldometerNumbers";

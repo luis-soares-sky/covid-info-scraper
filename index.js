@@ -12,7 +12,7 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "world",
 		url: "https://www.worldometers.info/coronavirus/",
-		extractor: extractors.extractCovidNumbers,
+		extractor: extractors.extractWorldometerNumbers,
 		runner: runners.runThresholdCheck,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":globe_with_meridians: World",
@@ -26,7 +26,7 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "portugal",
 		url: "https://www.worldometers.info/coronavirus/country/portugal/",
-		extractor: extractors.extractCovidNumbers,
+		extractor: extractors.extractWorldometerNumbers,
 		runner: runners.runDailyStats,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":flag_pt: Portugal",
@@ -39,7 +39,7 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "uk",
 		url: "https://www.worldometers.info/coronavirus/country/uk/",
-		extractor: extractors.extractCovidNumbers,
+		extractor: extractors.extractWorldometerNumbers,
 		runner: runners.runDailyStats,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":flag_gb: United Kingdom",
@@ -55,7 +55,7 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "belgium",
 		url: "https://www.worldometers.info/coronavirus/country/belgium/",
-		extractor: extractors.extractCovidNumbers,
+		extractor: extractors.extractWorldometerNumbers,
 		runner: runners.runDailyStats,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":flag_be: Belgium",
