@@ -24,7 +24,7 @@ export class DatabaseInstance {
 
 	add(id: string, info: CovidNumbers): void {
 		this.connection.get("records").push({ id, info, timestampAdd: Date.now(), timestampUpdate: 0 }).write();
-		this.connection.update("count", n => n + 1).write();
+		this.connection.update("count", () => this.connection.get("records").value().length).write();
 	}
 
 	update(id: string, info: CovidNumbers): void {

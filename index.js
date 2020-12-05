@@ -10,13 +10,26 @@ const colors = require("./dist/source/utils/colors");
 
 require("./dist/source/scraper").runAllConfigs(...[
 	{
+		id: "world",
+		url: "https://www.worldometers.info/coronavirus/",
+		extractor: extractors.extractCovidNumbers,
+		runner: runners.runThresholdCheck,
+		webhook: process.env.DISCORD_WEBHOOK_URL,
+		title: ":globe_with_meridians: World",
+		linesBefore: [
+			"https://www.worldometers.info/coronavirus/\n",
+			"{days} later, the number of worldwide cases has grown by at least 1 million.",
+			"Here are the global numbers so far:"
+		],
+		logColor: colors.FgMagenta
+	},
+	{
 		id: "portugal",
 		url: "https://www.worldometers.info/coronavirus/country/portugal/",
 		extractor: extractors.extractCovidNumbers,
 		runner: runners.runDailyStats,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":flag_pt: Portugal",
-		content: "Worldometer has reported new daily stats for Portugal.",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/country/portugal/",
 			"https://covid19.min-saude.pt/relatorio-de-situacao/"
@@ -30,13 +43,12 @@ require("./dist/source/scraper").runAllConfigs(...[
 		runner: runners.runDailyStats,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":flag_gb: United Kingdom",
-		content: "Worldometer has reported new daily stats for the UK.",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/country/uk/",
 			"https://coronavirus.data.gov.uk/"
 		],
 		linesAfter: [
-			"_Notice: the UK does not report recoveries._"
+			"_Note: the UK does not report recoveries nor active cases._"
 		],
 		logColor: colors.FgCyan
 	},
@@ -47,7 +59,6 @@ require("./dist/source/scraper").runAllConfigs(...[
 		runner: runners.runDailyStats,
 		webhook: process.env.DISCORD_WEBHOOK_URL,
 		title: ":flag_be: Belgium",
-		content: "Worldometer has reported new daily stats for Belgium.",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/country/belgium/",
 			"https://epistat.wiv-isp.be/covid/covid-19.html"
