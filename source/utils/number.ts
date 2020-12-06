@@ -5,7 +5,7 @@ import { isNumber, isString } from "lodash";
  * @param value Value to format.
  */
 export function formatNumber(value: number): string {
-	return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
 /**
@@ -13,9 +13,9 @@ export function formatNumber(value: number): string {
  * @param value Value to sanitize.
  */
 export function sanitizeNumber(value: any): number {
-	if (isString(value)) return parseFloat(value.replace(/[^0-9-.]/g, ""));
-	if (isNumber(value)) return value;
-	return NaN;
+    if (isString(value)) return parseFloat(value.replace(/[^0-9-.]/g, ""));
+    if (isNumber(value)) return value;
+    return NaN;
 };
 
 /**
@@ -23,6 +23,6 @@ export function sanitizeNumber(value: any): number {
  * @param value Value to sanitize.
  */
 export function neutralizeNumber(value: number): number {
-	if (isNaN(value)) return 0;
-	return value;
+    if (isNaN(value)) return 0;
+    return value;
 };
