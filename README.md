@@ -2,7 +2,7 @@
 
 ![result1.jpg](./.docs/images/result1.jpg)
 
-This is a small app that scrapes data from a given URL (thank you, [Worldometer](https://www.worldometer.info)), extracts the required numbers, and sends an update to a Discord channel via webhook.
+This is a small app that scrapes data from a given URL (thank you, [Worldometer](https://www.worldometers.info/coronavirus/)), extracts the required numbers, and sends an update to a Discord channel via webhook.
 
 ## How to use
 
