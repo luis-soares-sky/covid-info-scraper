@@ -11,6 +11,7 @@ import { formatNumber } from "../utils/number";
  * Calculates when the cases reach a certain threshold using the given COVID data and context.
  */
 export default class DailyThresholdRunner extends SourceRunner {
+	public factor: number = 1000000;
 	public skipDeltaCheck: boolean = false;
 
 	/**
@@ -32,7 +33,7 @@ export default class DailyThresholdRunner extends SourceRunner {
 		const idToday = formatYMD(currentDate);
 		const idYesterday = formatYMD(currentDate, -1);
 
-		log(`running DAILY THRESHOLD for new item ${idToday}...`, context);
+		log(`running DAILY THRESHOLD (factor = ${this.factor}) for new item ${idToday}...`, context);
 		const db = getDatabase(context.id);
 		const itemToday = db.find(idToday);
 		if (itemToday) {
@@ -50,24 +51,30 @@ export default class DailyThresholdRunner extends SourceRunner {
 			db.add(idToday, latest);
 		}
 
+		const latestCases = Math.floor(latest.cases / this.factor);
+		const todayCases = itemToday ? Math.floor(itemToday.info.cases / this.factor) : -1;
+		if (todayCases >= latestCases) {
+			log(`latest cases (${idToday}, ${latestCases}) are not higher than today's earlier cases (${todayCases}), skipping.`, context);
+			return null;
+		}
+
 		const itemYesterday = db.find(idYesterday);
 		if (!itemYesterday) {
 			log(`item ${idYesterday} does not exist in db, cannot calc stats, skipping.`, context);
 			return null;
 		}
 
-		const todayCases = Math.floor(latest.cases / 1000000);
-		const yesterdayCases = Math.floor(itemYesterday.info.cases / 1000000);
-		if (yesterdayCases >= todayCases) {
-			log(`today's cases (${idToday}, ${todayCases}m) are not higher than yesterday (${idYesterday}, ${yesterdayCases}m), skipping.`, context);
+		const yesterdayCases = Math.floor(itemYesterday.info.cases / this.factor);
+		if (yesterdayCases >= latestCases) {
+			log(`latest cases (${idToday}, ${latestCases}) are not higher than yesterday (${idYesterday}, ${yesterdayCases}), skipping.`, context);
 			return null;
 		}
 
 		const days = db.connection.get("records")
 			.sortBy(["id"])
 			.reverse()
-			.map((v) => Math.floor(v.info.cases / 1000000))
-			.filter((v) => v >= yesterdayCases && v < todayCases)
+			.map((v) => Math.floor(v.info.cases / this.factor))
+			.filter((v) => v >= yesterdayCases && v < latestCases)
 			.value()
 			.length;
 
@@ -87,7 +94,10 @@ export default class DailyThresholdRunner extends SourceRunner {
 			embeds: [
 				{
 					title: context.title,
-					description: filter(outputs).join("\n").replace("{days}", `${days} day${days != 1 ? "s" : ""}`)
+					description: filter(outputs).join("\n")
+						.replace("{time}", `${days} day${days != 1 ? "s" : ""}`)
+						.replace("{valueBefore}", yesterdayCases.toString())
+						.replace("{valueNow}", latestCases.toString())
 				}
 			]
 		};

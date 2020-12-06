@@ -14,21 +14,28 @@ import * as colors from "./source/utils/colors";
 // Webhooks/credentials belong in a ".env" file that should not be commited, please use it.
 // If you do not have a ".env" file, please check ".env-sample".
 const DISCORD_WEBHOOK_URL = isString(process.env.DISCORD_WEBHOOK_URL) ? process.env.DISCORD_WEBHOOK_URL : "";
-const DAILY_SKIP_DELTA_CHECK = false;
-const DAILY_SKIP_THRESHOLD_CHECK = false;
 
+// Easy configs for the runners.
+const STATS_SKIP_DELTA_CHECK = false;
+const THRESHOLD_FACTOR = 1000000;
+const THRESHOLD_SKIP_DELTA_CHECK = false;
+
+// Finally, execute.
 runAllConfigs(...[
 	{
 		id: "world",
 		url: "https://www.worldometers.info/coronavirus/",
 		extractor: new WorldometerNumberExtractor(),
-		runner: new DailyThresholdRunner({ skipDeltaCheck: DAILY_SKIP_THRESHOLD_CHECK }),
+		runner: new DailyThresholdRunner({
+			factor: THRESHOLD_FACTOR,
+			skipDeltaCheck: THRESHOLD_SKIP_DELTA_CHECK
+		}),
 		webhook: DISCORD_WEBHOOK_URL,
 		title: ":globe_with_meridians: World",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/\n",
-			"{days} later, the number of worldwide cases has grown by at least 1 million.",
-			"Here are the global numbers so far:"
+			"The number of worldwide cases has grown by at least 1 million.",
+			"It took **{time}** to reach from **{valueBefore}m** to **{valueNow}m**."
 		],
 		logColor: colors.FgMagenta
 	},
@@ -36,7 +43,7 @@ runAllConfigs(...[
 		id: "portugal",
 		url: "https://www.worldometers.info/coronavirus/country/portugal/",
 		extractor: new WorldometerNumberExtractor(),
-		runner: new DailyStatsRunner({ skipDeltaCheck: DAILY_SKIP_DELTA_CHECK }),
+		runner: new DailyStatsRunner({ skipDeltaCheck: STATS_SKIP_DELTA_CHECK }),
 		webhook: DISCORD_WEBHOOK_URL,
 		title: ":flag_pt: Portugal",
 		linesBefore: [
@@ -49,7 +56,7 @@ runAllConfigs(...[
 		id: "uk",
 		url: "https://www.worldometers.info/coronavirus/country/uk/",
 		extractor: new WorldometerNumberExtractor(),
-		runner: new DailyStatsRunner({ skipDeltaCheck: DAILY_SKIP_DELTA_CHECK }),
+		runner: new DailyStatsRunner({ skipDeltaCheck: STATS_SKIP_DELTA_CHECK }),
 		webhook: DISCORD_WEBHOOK_URL,
 		title: ":flag_gb: United Kingdom",
 		linesBefore: [
@@ -65,7 +72,7 @@ runAllConfigs(...[
 		id: "belgium",
 		url: "https://www.worldometers.info/coronavirus/country/belgium/",
 		extractor: new WorldometerNumberExtractor(),
-		runner: new DailyStatsRunner({ skipDeltaCheck: DAILY_SKIP_DELTA_CHECK }),
+		runner: new DailyStatsRunner({ skipDeltaCheck: STATS_SKIP_DELTA_CHECK }),
 		webhook: DISCORD_WEBHOOK_URL,
 		title: ":flag_be: Belgium",
 		linesBefore: [

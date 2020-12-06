@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import lowdb from "lowdb";
 import FileSync from "lowdb/adapters/FileSync";
 import { resolve } from "path";
@@ -28,8 +29,10 @@ export class DatabaseInstance {
 			.write();
 	}
 
-	public find(id: string): DatabaseRecord {
-		return this.connection.get("records").find({ id }).value();
+	public find(id: string): DatabaseRecord | null {
+		const record = this.connection.get("records").find({ id }).value();
+		if (record) return cloneDeep(record);
+		return null;
 	}
 
 	public add(id: string, info: CovidNumbers): void {
