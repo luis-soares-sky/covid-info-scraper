@@ -1,20 +1,29 @@
 require("dotenv").config();
 
+// Basic imports.
+import { isString } from "lodash";
+import { runAllConfigs } from "./source/scraper";
+
+// Config dependencies.
+import WorldometerNumberExtractor from "./source/extractors/WorldometerNumberExtractor";
+import DailyStatsRunner from "./source/runners/DailyStatsRunner";
+import DailyThresholdRunner from "./source/runners/DailyThresholdRunner";
+import * as colors from "./source/utils/colors";
+
 // DO NOT ADD SENSITIVE INFORMATION TO THIS FILE.
-// Webhooks/credentials belong in a ".env" file, please use it.
+// Webhooks/credentials belong in a ".env" file that should not be commited, please use it.
 // If you do not have a ".env" file, please check ".env-sample".
+const DISCORD_WEBHOOK_URL = isString(process.env.DISCORD_WEBHOOK_URL) ? process.env.DISCORD_WEBHOOK_URL : "";
+const DAILY_SKIP_DELTA_CHECK = false;
+const DAILY_SKIP_THRESHOLD_CHECK = false;
 
-const extractors = require("./dist/source/extractors");
-const runners = require("./dist/source/runners");
-const colors = require("./dist/source/utils/colors");
-
-require("./dist/source/scraper").runAllConfigs(...[
+runAllConfigs(...[
 	{
 		id: "world",
 		url: "https://www.worldometers.info/coronavirus/",
-		extractor: extractors.extractWorldometerNumbers,
-		runner: runners.runThresholdCheck,
-		webhook: process.env.DISCORD_WEBHOOK_URL,
+		extractor: new WorldometerNumberExtractor(),
+		runner: new DailyThresholdRunner({ skipDeltaCheck: DAILY_SKIP_THRESHOLD_CHECK }),
+		webhook: DISCORD_WEBHOOK_URL,
 		title: ":globe_with_meridians: World",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/\n",
@@ -26,9 +35,9 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "portugal",
 		url: "https://www.worldometers.info/coronavirus/country/portugal/",
-		extractor: extractors.extractWorldometerNumbers,
-		runner: runners.runDailyStats,
-		webhook: process.env.DISCORD_WEBHOOK_URL,
+		extractor: new WorldometerNumberExtractor(),
+		runner: new DailyStatsRunner({ skipDeltaCheck: DAILY_SKIP_DELTA_CHECK }),
+		webhook: DISCORD_WEBHOOK_URL,
 		title: ":flag_pt: Portugal",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/country/portugal/",
@@ -39,9 +48,9 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "uk",
 		url: "https://www.worldometers.info/coronavirus/country/uk/",
-		extractor: extractors.extractWorldometerNumbers,
-		runner: runners.runDailyStats,
-		webhook: process.env.DISCORD_WEBHOOK_URL,
+		extractor: new WorldometerNumberExtractor(),
+		runner: new DailyStatsRunner({ skipDeltaCheck: DAILY_SKIP_DELTA_CHECK }),
+		webhook: DISCORD_WEBHOOK_URL,
 		title: ":flag_gb: United Kingdom",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/country/uk/",
@@ -55,9 +64,9 @@ require("./dist/source/scraper").runAllConfigs(...[
 	{
 		id: "belgium",
 		url: "https://www.worldometers.info/coronavirus/country/belgium/",
-		extractor: extractors.extractWorldometerNumbers,
-		runner: runners.runDailyStats,
-		webhook: process.env.DISCORD_WEBHOOK_URL,
+		extractor: new WorldometerNumberExtractor(),
+		runner: new DailyStatsRunner({ skipDeltaCheck: DAILY_SKIP_DELTA_CHECK }),
+		webhook: DISCORD_WEBHOOK_URL,
 		title: ":flag_be: Belgium",
 		linesBefore: [
 			"https://www.worldometers.info/coronavirus/country/belgium/",

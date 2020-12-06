@@ -1,1 +1,0 @@
-export { extractWorldometerNumbers } from "./extractWorldometerNumbers";

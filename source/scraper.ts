@@ -24,8 +24,8 @@ export async function fetchHtml(url: string): Promise<string> {
  */
 export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<any> {
 	const html = await fetchHtml(context.url);
-	const latest = context.extractor(html);
-	const notification = await context.runner(latest, context, log);
+	const latest = context.extractor.execute(html);
+	const notification = await context.runner.execute(latest, context, log);
 
 	if (notification) {
 		return axios.post(context.webhook, notification); // post to discord

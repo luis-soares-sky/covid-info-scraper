@@ -6,8 +6,9 @@
 	"scripts": {
 		"build": "tsc",
 		"clean": "rimraf dist",
+		"cron": "run-s build start",
 		"sandbox": "run-s clean build start",
-		"start": "node index"
+		"start": "node dist/index"
 	},
 	"keywords": [
 		"covid"
