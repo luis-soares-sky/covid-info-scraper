@@ -64,7 +64,7 @@ runAllConfigs(...[
             "https://coronavirus.data.gov.uk/"
         ],
         linesAfter: [
-            "_Note: the UK does not report recoveries nor active cases._"
+            "_Note: the UK may report several metrics at different times of the day._"
         ],
         logColor: colors.FgCyan
     },
