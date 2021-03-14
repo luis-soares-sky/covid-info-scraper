@@ -1,6 +1,13 @@
 import axios from "axios";
-import { SourceContext, SourceLoggerMethod } from "./types/sources";
+import { SourceContext, SourceLoggerMethod, SourceRunnerResult } from "./types/sources";
 import * as colors from "./utils/colors";
+
+export enum ScraperResult {
+    FAIL,
+    SKIPPED,
+    POSTED,
+    UPDATED
+}
 
 /**
  * Attempts to fetch HTML from the given URL.
@@ -19,19 +26,32 @@ export async function fetchHtml(url: string): Promise<string> {
 };
 
 /**
+ * Given a source runner's result, posts it to Discord.
+ * @param context Configuration context needed to run the scraping process.
+ * @param log Method to log results to the console.
+ * @param result Object containing results from the configuration context's runner.
+ */
+export async function postToDiscord(context: SourceContext, log: SourceLoggerMethod, result: SourceRunnerResult | null): Promise<ScraperResult> {
+    if (!result || !result.message) {
+        return ScraperResult.SKIPPED;
+    }
+    const messageResult = await axios.post(context.webhook, result.message);
+    if (messageResult.status >= 200 && messageResult.status < 400) {
+        return ScraperResult.POSTED;
+    }
+    return ScraperResult.FAIL;
+}
+
+/**
  * Runs a given configuration by scraping the given URL, extracting the data, and executing the runner.
  * @param context Configuration context needed to run the scraping process.
+ * @param log Method to log results to the console.
  */
-export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<any> {
+export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<ScraperResult> {
     const html = await fetchHtml(context.url);
     const extractorResult = context.extractor.execute(html);
     const runnerResult = await context.runner.execute(extractorResult, context, log);
-
-    if (runnerResult && runnerResult.message) {
-        const messageResult = await axios.post(context.webhook, runnerResult.message); // post to discord
-        return messageResult;
-    }
-    return null;
+    return await postToDiscord(context, log, runnerResult);
 }
 
 /**
@@ -42,7 +62,8 @@ export async function runAllConfigs(...configs: SourceContext[]) {
     log("Running configs...");
     for (const config of configs) {
         log(`Running config "${config.id}"...`);
-        await runConfig(config, log);
+        const result = await runConfig(config, log);
+        log(`Result for config "${config.id}": ${result}`);
     }
     log("All done.\n");
 }
