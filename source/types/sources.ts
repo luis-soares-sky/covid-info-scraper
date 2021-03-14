@@ -1,5 +1,5 @@
 import { CovidNumbers } from "./covid";
-import { DiscordNotification } from "./discord";
+import { DiscordMessage } from "./discord";
 
 export type SourceLoggerMethod = (message: string, context: SourceContext) => void;
 
@@ -20,6 +20,10 @@ export abstract class SourceExtractor {
     public abstract execute(html: string): CovidNumbers;
 }
 
+export type SourceRunnerResult = {
+    message?: DiscordMessage;
+};
+
 export abstract class SourceRunner {
-    public abstract execute(latest: CovidNumbers, context: SourceContext, log: SourceLoggerMethod): Promise<DiscordNotification | null>;
+    public abstract execute(latest: CovidNumbers, context: SourceContext, log: SourceLoggerMethod): Promise<SourceRunnerResult | null>;
 }

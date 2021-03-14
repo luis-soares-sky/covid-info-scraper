@@ -4,7 +4,7 @@ export type DiscordField = {
     inline?: boolean;
 };
 
-export type DiscordNotification = {
+export type DiscordMessage = {
     content?: string;
     embeds?: [{
         url?: string;

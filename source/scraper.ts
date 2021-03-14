@@ -24,11 +24,12 @@ export async function fetchHtml(url: string): Promise<string> {
  */
 export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<any> {
     const html = await fetchHtml(context.url);
-    const latest = context.extractor.execute(html);
-    const notification = await context.runner.execute(latest, context, log);
+    const extractorResult = context.extractor.execute(html);
+    const runnerResult = await context.runner.execute(extractorResult, context, log);
 
-    if (notification) {
-        return axios.post(context.webhook, notification); // post to discord
+    if (runnerResult && runnerResult.message) {
+        const messageResult = await axios.post(context.webhook, runnerResult.message); // post to discord
+        return messageResult;
     }
     return null;
 }

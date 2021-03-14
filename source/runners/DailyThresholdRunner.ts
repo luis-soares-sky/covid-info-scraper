@@ -1,8 +1,7 @@
 import { filter, some } from "lodash";
 import { getDatabase } from "../database";
 import { CovidNumbers } from "../types/covid";
-import { DiscordNotification } from "../types/discord";
-import { SourceContext, SourceLoggerMethod, SourceRunner } from "../types/sources";
+import { SourceContext, SourceLoggerMethod, SourceRunner, SourceRunnerResult } from "../types/sources";
 import { calcCovidDelta } from "../utils/covid";
 import { formatYMD } from "../utils/date";
 import { formatNumber } from "../utils/number";
@@ -28,7 +27,7 @@ export default class DailyThresholdRunner extends SourceRunner {
      * @param context Configuration context.
      * @param log Logger method.
      */
-    public async execute(latest: CovidNumbers, context: SourceContext, log: SourceLoggerMethod): Promise<DiscordNotification | null> {
+    public async execute(latest: CovidNumbers, context: SourceContext, log: SourceLoggerMethod): Promise<SourceRunnerResult | null> {
         const currentDate = new Date();
         const idToday = formatYMD(currentDate);
         const idYesterday = formatYMD(currentDate, -1);
@@ -90,16 +89,18 @@ export default class DailyThresholdRunner extends SourceRunner {
         log(`notifying stats for ${idToday}. ✔`, context);
 
         return {
-            content: context.content,
-            embeds: [
-                {
-                    title: context.title,
-                    description: filter(outputs).join("\n")
-                        .replace("{time}", `${days} day${days != 1 ? "s" : ""}`)
-                        .replace("{valueBefore}", yesterdayCases.toString())
-                        .replace("{valueNow}", latestCases.toString())
-                }
-            ]
+            message: {
+                content: context.content,
+                embeds: [
+                    {
+                        title: context.title,
+                        description: filter(outputs).join("\n")
+                            .replace("{time}", `${days} day${days != 1 ? "s" : ""}`)
+                            .replace("{valueBefore}", yesterdayCases.toString())
+                            .replace("{valueNow}", latestCases.toString())
+                    }
+                ]
+            }
         };
     }
 
