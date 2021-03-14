@@ -10,7 +10,7 @@ import { formatNumber } from "../utils/number";
  * Calculates when the cases reach a certain threshold using the given COVID data and context.
  */
 export default class DailyThresholdRunner extends SourceRunner {
-    public factor: number = 1000000;
+    public scaleFactor: number = 1000000;
     public skipDeltaCheck: boolean = false;
 
     /**
@@ -32,7 +32,7 @@ export default class DailyThresholdRunner extends SourceRunner {
         const idToday = formatYMD(currentDate);
         const idYesterday = formatYMD(currentDate, -1);
 
-        log(`running DAILY THRESHOLD (factor = ${this.factor}) for new item ${idToday}...`, context);
+        log(`running DAILY THRESHOLD (factor = ${this.scaleFactor}) for new item ${idToday}...`, context);
         const db = getDatabase(context.id);
         const itemToday = db.find(idToday);
         if (itemToday) {
@@ -50,8 +50,8 @@ export default class DailyThresholdRunner extends SourceRunner {
             db.add(idToday, latest);
         }
 
-        const latestCases = Math.floor(latest.cases / this.factor);
-        const todayCases = itemToday ? Math.floor(itemToday.info.cases / this.factor) : -1;
+        const latestCases = Math.floor(latest.cases / this.scaleFactor);
+        const todayCases = itemToday ? Math.floor(itemToday.info.cases / this.scaleFactor) : -1;
         if (todayCases >= latestCases) {
             log(`latest cases (${idToday}, ${latestCases}) are not higher than today's earlier cases (${todayCases}), skipping.`, context);
             return null;
@@ -63,7 +63,7 @@ export default class DailyThresholdRunner extends SourceRunner {
             return null;
         }
 
-        const yesterdayCases = Math.floor(itemYesterday.info.cases / this.factor);
+        const yesterdayCases = Math.floor(itemYesterday.info.cases / this.scaleFactor);
         if (yesterdayCases >= latestCases) {
             log(`latest cases (${idToday}, ${latestCases}) are not higher than yesterday (${idYesterday}, ${yesterdayCases}), skipping.`, context);
             return null;
@@ -72,7 +72,7 @@ export default class DailyThresholdRunner extends SourceRunner {
         const days = db.connection.get("records")
             .sortBy(["id"])
             .reverse()
-            .map((v) => Math.floor(v.info.cases / this.factor))
+            .map((v) => Math.floor(v.info.cases / this.scaleFactor))
             .filter((v) => v >= yesterdayCases && v < latestCases)
             .value()
             .length;
