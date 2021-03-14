@@ -5,15 +5,15 @@ import { resolve } from "path";
 import { CovidNumbers } from "./types/covid";
 
 export type DatabaseRecord = {
-    id: string,
-    info: CovidNumbers,
-    timestampAdd: number
-    timestampUpdate: number
+    id: string;
+    info: CovidNumbers;
+    timestampAdd: number;
+    timestampUpdate: number;
 };
 
 export type DatabaseStruct = {
-    records: DatabaseRecord[],
-    count: number
+    records: DatabaseRecord[];
+    count: number;
 };
 
 export class DatabaseInstance {
