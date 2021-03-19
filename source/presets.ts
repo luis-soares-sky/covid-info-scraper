@@ -80,12 +80,12 @@ export function getConfigDenmark(webhook: string, skipDeltaCheck: boolean): Sour
 export function getConfigGermany(webhook: string, skipDeltaCheck: boolean): SourceContext {
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
-        id: "denmark",
-        url: "https://www.worldometers.info/coronavirus/country/denmark/",
-        title: ":flag_dk: Denmark",
+        id: "germany",
+        url: "https://www.worldometers.info/coronavirus/country/germany/",
+        title: ":flag_de: germany",
         linesBefore: [
-            "https://www.worldometers.info/coronavirus/country/denmark/",
-            "https://www.ssi.dk/covid19data"
+            "https://www.worldometers.info/coronavirus/country/germany/",
+            "https://interaktiv.tagesspiegel.de/lab/karte-sars-cov-2-in-deutschland-landkreise/"
         ],
         logColor: colors.FgYellow
     }
