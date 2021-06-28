@@ -1,12 +1,13 @@
+import VostNumberExtractor from "./extractors/VostNumberExtractor";
 import WorldometerNumberExtractor from "./extractors/WorldometerNumberExtractor";
 import DailyStatsRunner from "./runners/DailyStatsRunner";
 import DailyThresholdRunner from "./runners/DailyThresholdRunner";
 import { SourceContext } from "./types/sources";
 import * as colors from "./utils/colors";
+import { formatDateIntl } from "./utils/date";
 
-export function generateDailyThresholdConfig(webhook: string, skipDeltaCheck: boolean, scaleFactor: number): Pick<SourceContext, "extractor" | "runner" | "webhook"> {
+export function generateDailyThresholdConfig(webhook: string, skipDeltaCheck: boolean, scaleFactor: number): Pick<SourceContext, "runner" | "webhook"> {
     return {
-        extractor: new WorldometerNumberExtractor(),
         runner: new DailyThresholdRunner({ scaleFactor, skipDeltaCheck }),
         webhook
     }
@@ -16,8 +17,10 @@ export function getConfigWorld(webhook: string, skipDeltaCheck: boolean, scaleFa
     return {
         ...generateDailyThresholdConfig(webhook, skipDeltaCheck, scaleFactor),
         id: "world",
-        url: "https://www.worldometers.info/coronavirus/",
         title: ":globe_with_meridians: World",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/\n",
             "The number of worldwide cases has grown by at least 1 million.",
@@ -27,9 +30,8 @@ export function getConfigWorld(webhook: string, skipDeltaCheck: boolean, scaleFa
     }
 }
 
-export function generateDailyStatsConfig(webhook: string, skipDeltaCheck: boolean): Pick<SourceContext, "extractor" | "runner" | "webhook"> {
+export function generateDailyStatsConfig(webhook: string, skipDeltaCheck: boolean): Pick<SourceContext, "runner" | "webhook"> {
     return {
-        extractor: new WorldometerNumberExtractor(),
         runner: new DailyStatsRunner({ skipDeltaCheck }),
         webhook
     }
@@ -39,8 +41,10 @@ export function getConfigBelgium(webhook: string, skipDeltaCheck: boolean): Sour
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "belgium",
-        url: "https://www.worldometers.info/coronavirus/country/belgium/",
         title: ":flag_be: Belgium",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/belgium/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/belgium/",
             "https://epistat.wiv-isp.be/covid/covid-19.html"
@@ -53,8 +57,10 @@ export function getConfigCanada(webhook: string, skipDeltaCheck: boolean): Sourc
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "canada",
-        url: "https://www.worldometers.info/coronavirus/country/canada/",
         title: ":flag_ca: Canada",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/canada/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/canada/",
             "https://www.ctvnews.ca/health/coronavirus/tracking-every-case-of-covid-19-in-canada-1.4852102"
@@ -67,8 +73,10 @@ export function getConfigDenmark(webhook: string, skipDeltaCheck: boolean): Sour
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "denmark",
-        url: "https://www.worldometers.info/coronavirus/country/denmark/",
         title: ":flag_dk: Denmark",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/denmark/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/denmark/",
             "https://www.ssi.dk/covid19data"
@@ -81,8 +89,10 @@ export function getConfigGermany(webhook: string, skipDeltaCheck: boolean): Sour
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "germany",
-        url: "https://www.worldometers.info/coronavirus/country/germany/",
         title: ":flag_de: germany",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/germany/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/germany/",
             "https://interaktiv.tagesspiegel.de/lab/karte-sars-cov-2-in-deutschland-landkreise/"
@@ -95,11 +105,15 @@ export function getConfigPortugal(webhook: string, skipDeltaCheck: boolean): Sou
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "portugal",
-        url: "https://www.worldometers.info/coronavirus/country/portugal/",
         title: ":flag_pt: Portugal",
+        extractors: [
+            // new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/portugal/"),
+            new VostNumberExtractor("https://covid19-api.vost.pt/Requests/get_entry/" + formatDateIntl(new Date(), "pt", [{ day: "2-digit" }, { month: "2-digit" }, { year: "numeric" }], "-"))
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/portugal/",
-            "https://covid19.min-saude.pt/relatorio-de-situacao/"
+            "https://covid19.min-saude.pt/relatorio-de-situacao/",
+            "https://covid19-api.vost.pt/"
         ],
         logColor: colors.FgGreen
     }
@@ -109,8 +123,10 @@ export function getConfigUnitedKingdom(webhook: string, skipDeltaCheck: boolean)
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "uk",
-        url: "https://www.worldometers.info/coronavirus/country/uk/",
         title: ":flag_gb: United Kingdom",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/uk/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/uk/",
             "https://coronavirus.data.gov.uk/"
@@ -126,8 +142,10 @@ export function getConfigUnitedStates(webhook: string, skipDeltaCheck: boolean):
     return {
         ...generateDailyStatsConfig(webhook, skipDeltaCheck),
         id: "us",
-        url: "https://www.worldometers.info/coronavirus/country/us/",
         title: ":flag_us: United States",
+        extractors: [
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/us/")
+        ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/us/"
         ],
