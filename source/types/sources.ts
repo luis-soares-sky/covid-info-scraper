@@ -5,8 +5,7 @@ export type SourceLoggerMethod = (message: string, context: SourceContext) => vo
 
 export type SourceContext = {
     id: string;
-    url: string;
-    extractor: SourceExtractor;
+    extractors: SourceExtractor<CovidNumbers>[];
     runner: SourceRunner;
     webhook: string;
     title: string;
@@ -16,8 +15,8 @@ export type SourceContext = {
     logColor?: string;
 };
 
-export abstract class SourceExtractor {
-    public abstract execute(html: string): CovidNumbers;
+export abstract class SourceExtractor<T> {
+    public abstract execute(): Promise<T>;
 }
 
 export type SourceRunnerResult = {

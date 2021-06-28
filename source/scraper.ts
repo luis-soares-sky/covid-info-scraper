@@ -1,8 +1,10 @@
 import axios from "axios";
-import { SourceContext, SourceLoggerMethod, SourceRunnerResult } from "./types/sources";
+import { CovidNumbers } from "./types/covid";
+import { SourceContext, SourceExtractor, SourceLoggerMethod, SourceRunnerResult } from "./types/sources";
 import * as colors from "./utils/colors";
 
 export enum ScraperResult {
+    UNKNOWN,
     FAIL,
     SKIPPED,
     POSTED,
@@ -10,20 +12,22 @@ export enum ScraperResult {
 }
 
 /**
- * Attempts to fetch HTML from the given URL.
- * @param url URL to fetch.
+ * Runs every extractor in a given array and returns an array with each instance's results.
+ * @param extractors The array of data extractors to execute.
  */
-export async function fetchHtml(url: string): Promise<string> {
-    url = url.replace(/^(https?:)?\/\//, "https://");
-
-    return await axios
-        .get(url)
-        .then(response => response.data)
-        .catch(error => {
-            error.status = (error.response && error.response.status) || 500;
-            throw error;
-        });
-};
+export async function runExtractors(extractors: SourceExtractor<CovidNumbers>[]): Promise<CovidNumbers[]> {
+    const results: CovidNumbers[] = [];
+    for (const extractor of extractors) {
+        try {
+            const result = await extractor.execute();
+            results.push(result);
+        }
+        catch (e) {
+            log(`Extractor ${extractor} failed.`)
+        }
+    }
+    return results;
+}
 
 /**
  * Given a source runner's result, posts it to Discord.
@@ -48,10 +52,13 @@ export async function postToDiscord(context: SourceContext, log: SourceLoggerMet
  * @param log Method to log results to the console.
  */
 export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<ScraperResult> {
-    const html = await fetchHtml(context.url);
-    const extractorResult = context.extractor.execute(html);
-    const runnerResult = await context.runner.execute(extractorResult, context, log);
-    return await postToDiscord(context, log, runnerResult);
+    const extractorResults = await runExtractors(context.extractors);
+    if (extractorResults.length > 0) {
+        const extractorLatest = extractorResults[0]; //TODO logic to merge results? for now we'll only support one extractor.
+        const runnerResult = await context.runner.execute(extractorLatest, context, log);
+        return await postToDiscord(context, log, runnerResult);
+    }
+    return Promise.reject(ScraperResult.UNKNOWN);
 }
 
 /**
