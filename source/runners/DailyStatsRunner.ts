@@ -69,10 +69,11 @@ export default class DailyStatsRunner extends SourceRunner {
         }
 
         let outputs = [
-            this.outputDailyStatsLine("radioactive", "cases", latest.cases, delta.cases, trends?.cases),
-            this.outputDailyStatsLine("skull_crossbones", "deaths", latest.deaths, delta.deaths, trends?.deaths),
-            this.outputDailyStatsLine("house_with_garden", "recoveries", latest.recoveries, delta.recoveries, trends?.recoveries),
-            this.outputDailyStatsLine("zombie", "active", latest.active, delta.active, trends?.active)
+            this.outputDailyStatsLine("radioactive", "total infected", latest.cases, delta.cases, trends?.cases),
+            this.outputDailyStatsLine("skull_crossbones", "dead", latest.deaths, delta.deaths, trends?.deaths),
+            this.outputDailyStatsLine("house_with_garden", "recovered", latest.recoveries, delta.recoveries, trends?.recoveries),
+            this.outputDailyStatsLine("zombie", "active", latest.active, delta.active, trends?.active),
+            this.outputDailyStatsLine("bed", "hospitalized", latest.hospitalized, delta.hospitalized, trends?.hospitalized),
         ];
 
         if (context.linesBefore && context.linesBefore.length > 0) outputs.unshift(...context.linesBefore, " ");

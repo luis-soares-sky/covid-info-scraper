@@ -78,9 +78,9 @@ export default class DailyThresholdRunner extends SourceRunner {
             .length;
 
         let outputs = [
-            this.outputThresholdStatsLine("radioactive", "cases", latest.cases),
-            this.outputThresholdStatsLine("skull_crossbones", "deaths", latest.deaths),
-            this.outputThresholdStatsLine("house_with_garden", "recoveries", latest.recoveries),
+            this.outputThresholdStatsLine("radioactive", "total infected", latest.cases),
+            this.outputThresholdStatsLine("skull_crossbones", "dead", latest.deaths),
+            this.outputThresholdStatsLine("house_with_garden", "recovered", latest.recoveries),
             this.outputThresholdStatsLine("zombie", "active", latest.active)
         ];
 
