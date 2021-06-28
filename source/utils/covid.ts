@@ -9,6 +9,7 @@ export function calcCovidDelta(latest: CovidNumbers, previous: CovidNumbers): Co
     return {
         cases: latest.cases - previous.cases,
         deaths: latest.deaths - previous.deaths,
+        hospitalized: latest.hospitalized - previous.hospitalized,
         recoveries: latest.recoveries - previous.recoveries,
         active: latest.active - previous.active
     };
@@ -23,6 +24,7 @@ export function calcCovidPercentages(delta: CovidNumbers, previous: CovidNumbers
     return {
         cases: delta.cases / previous.cases,
         deaths: delta.deaths / previous.deaths,
+        hospitalized: delta.hospitalized / previous.hospitalized,
         recoveries: delta.recoveries / previous.recoveries,
         active: delta.active / previous.active
     };
