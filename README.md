@@ -10,7 +10,7 @@ This is a small app that scrapes data from a given URL (thank you, [Worldometer]
 - Configure a `.env` file, and a Discord webhook (check out `.env-sample` for a template);
 - Tweak the config object in `index.js` to suit your needs;
 - Run `npm install`;
-- Run `npm sandbox`.
+- Run `npm run sandbox`.
 
 ## Motivation
 
