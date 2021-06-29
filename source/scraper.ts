@@ -13,17 +13,18 @@ export enum ScraperResult {
 
 /**
  * Runs every extractor in a given array and returns an array with each instance's results.
- * @param extractors The array of data extractors to execute.
+ * @param context Configuration context needed to run the scraping process.
+ * @param log Method to log results to the console.
  */
-export async function runExtractors(extractors: SourceExtractor<CovidNumbers>[]): Promise<CovidNumbers[]> {
+export async function runExtractors(context: SourceContext, log: SourceLoggerMethod): Promise<CovidNumbers[]> {
     const results: CovidNumbers[] = [];
-    for (const extractor of extractors) {
+    for (const extractor of context.extractors) {
         try {
             const result = await extractor.execute();
             results.push(result);
         }
         catch (e) {
-            log(`Extractor ${extractor} failed.`)
+            log(`Extractor "${(extractor as any).constructor.name}" failed:\n  ${e.stack}`, context);
         }
     }
     return results;
@@ -52,7 +53,7 @@ export async function postToDiscord(context: SourceContext, log: SourceLoggerMet
  * @param log Method to log results to the console.
  */
 export async function runConfig(context: SourceContext, log: SourceLoggerMethod): Promise<ScraperResult> {
-    const extractorResults = await runExtractors(context.extractors);
+    const extractorResults = await runExtractors(context, log);
     if (extractorResults.length > 0) {
         const extractorLatest = extractorResults[0]; //TODO logic to merge results? for now we'll only support one extractor.
         const runnerResult = await context.runner.execute(extractorLatest, context, log);
