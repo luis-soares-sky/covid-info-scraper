@@ -4,11 +4,10 @@ import { SourceContext, SourceExtractor, SourceLoggerMethod, SourceRunnerResult 
 import * as colors from "./utils/colors";
 
 export enum ScraperResult {
-    UNKNOWN,
-    FAIL,
-    SKIPPED,
-    POSTED,
-    UPDATED
+    FAIL = "FAIL",
+    SKIPPED = "SKIPPED",
+    POSTED = "POSTED",
+    UPDATED = "UPDATED" // unused for now
 }
 
 /**
@@ -59,7 +58,7 @@ export async function runConfig(context: SourceContext, log: SourceLoggerMethod)
         const runnerResult = await context.runner.execute(extractorLatest, context, log);
         return await postToDiscord(context, log, runnerResult);
     }
-    return Promise.reject(ScraperResult.UNKNOWN);
+    return Promise.resolve(ScraperResult.FAIL);
 }
 
 /**
