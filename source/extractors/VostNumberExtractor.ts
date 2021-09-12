@@ -7,7 +7,7 @@ import { neutralizeNumber } from "../utils/number";
 /**
  * Extracts case, death and recovery numbers by using cheerio to parse the given HTML.
  */
-export default class WorldometerNumberExtractor extends SourceExtractor<CovidNumbers> {
+export default class VostNumberExtractor extends SourceExtractor<CovidNumbers> {
     public url: string;
 
     /**
