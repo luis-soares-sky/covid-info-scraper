@@ -113,7 +113,7 @@ export function getConfigPortugal(webhook: string, skipDeltaCheck: boolean): Sou
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/portugal/",
             "https://covid19.min-saude.pt/relatorio-de-situacao/",
-            "https://covid19-api.vost.pt/"
+            "https://pandemiaclara.sapo.pt/dados/"
         ],
         logColor: colors.FgGreen
     }
