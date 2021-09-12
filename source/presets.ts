@@ -107,8 +107,8 @@ export function getConfigPortugal(webhook: string, skipDeltaCheck: boolean): Sou
         id: "portugal",
         title: ":flag_pt: Portugal",
         extractors: [
-            // new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/portugal/"),
-            new VostNumberExtractor("https://covid19-api.vost.pt/Requests/get_entry/" + formatDateIntl(new Date(), "pt", [{ day: "2-digit" }, { month: "2-digit" }, { year: "numeric" }], "-"))
+            new WorldometerNumberExtractor("https://www.worldometers.info/coronavirus/country/portugal/")
+            // new VostNumberExtractor("https://covid19-api.vost.pt/Requests/get_entry/" + formatDateIntl(new Date(), "pt", [{ day: "2-digit" }, { month: "2-digit" }, { year: "numeric" }], "-"))
         ],
         linesBefore: [
             "https://www.worldometers.info/coronavirus/country/portugal/",
