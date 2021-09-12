@@ -1,6 +1,6 @@
 import axios from "axios";
 import { CovidNumbers } from "./types/covid";
-import { SourceContext, SourceExtractor, SourceLoggerMethod, SourceRunnerResult } from "./types/sources";
+import { SourceContext, SourceLoggerMethod, SourceRunnerResult } from "./types/sources";
 import * as colors from "./utils/colors";
 
 export enum ScraperResult {
@@ -22,7 +22,7 @@ export async function runExtractors(context: SourceContext, log: SourceLoggerMet
             const result = await extractor.execute();
             results.push(result);
         }
-        catch (e) {
+        catch (e: any) {
             log(`Extractor "${(extractor as any).constructor.name}" failed:\n  ${e.stack}`, context);
         }
     }
